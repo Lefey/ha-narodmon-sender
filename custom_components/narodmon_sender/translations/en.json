@@ -2,6 +2,7 @@
     "config": {
         "step": {
             "user": {
+                "title": "Set up Narodmon Sender",
                 "description": "Send selected sensors to narodmon.ru",
                 "data": {
                     "device_id": "Device ID",
@@ -18,6 +19,8 @@
     "options": {
         "step": {
             "init": {
+                "title": "Narodmon Sender options",
+                "description": "Adjust sensors and update interval",
                 "data": {
                     "sensors": "Sensors",
                     "interval": "Interval (s)"
