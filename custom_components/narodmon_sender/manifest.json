@@ -1,0 +1,10 @@
+{
+  "domain": "narodmon_sender",
+  "name": "Narodmon Sender",
+  "version": "0.1.0",
+  "codeowners": ["@example"],
+  "config_flow": true,
+  "documentation": "https://github.com/ha-narodmon/ha-narodmon-sender",
+  "issue_tracker": "https://github.com/ha-narodmon/ha-narodmon-sender/issues",
+  "iot_class": "local_push"
+}

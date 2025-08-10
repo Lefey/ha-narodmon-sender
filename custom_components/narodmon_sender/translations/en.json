@@ -1,0 +1,28 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "description": "Send selected sensors to narodmon.ru",
+                "data": {
+                    "device_id": "Device ID",
+                    "api_key": "API Key",
+                    "sensors": "Sensors",
+                    "interval": "Interval (s)"
+                }
+            }
+        },
+        "abort": {
+            "already_configured": "This device is already configured."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "sensors": "Sensors",
+                    "interval": "Interval (s)"
+                }
+            }
+        }
+    }
+}
