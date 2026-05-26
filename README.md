@@ -41,6 +41,23 @@ Narodmon и поддерживает отправку данных:
 6. Перезапустите Home Assistant.
 7. Добавьте интеграцию через **Настройки > Устройства и службы > Добавить интеграцию > Narodmon**.
 
+## Версионирование
+
+Интеграция использует Semantic Versioning в формате `MAJOR.MINOR.PATCH`.
+Текущая версия указана в `custom_components/narodmon/manifest.json`.
+
+Чтобы HACS показывал пользователям доступное обновление:
+
+1. Измените версию в `custom_components/narodmon/manifest.json`.
+2. Добавьте запись в `CHANGELOG.md`.
+3. Создайте git tag с тем же номером и префиксом `v`, например `v0.1.1`.
+4. Запушьте tag в GitHub.
+
+При push тега `v*` workflow `.github/workflows/release.yml` проверит, что tag
+совпадает с `manifest.json`, и создаст GitHub Release. HACS использует GitHub
+Releases для определения доступных версий, поэтому пользователи увидят
+обновление в интерфейсе HACS.
+
 ## Ручная Установка
 
 Скопируйте папку:

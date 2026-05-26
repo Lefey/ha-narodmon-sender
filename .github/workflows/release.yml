@@ -1,0 +1,54 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create GitHub release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate manifest version
+        shell: python
+        run: |
+          import json
+          import os
+          import sys
+
+          tag = os.environ["GITHUB_REF_NAME"]
+          with open("custom_components/narodmon/manifest.json", encoding="utf-8") as file:
+              manifest = json.load(file)
+
+          expected = tag.removeprefix("v")
+          actual = manifest.get("version")
+          if actual != expected:
+              print(f"manifest.json version {actual!r} does not match tag {tag!r}")
+              sys.exit(1)
+
+      - name: Build release notes
+        shell: python
+        run: |
+          import os
+          import re
+
+          version = os.environ["GITHUB_REF_NAME"].removeprefix("v")
+          changelog = open("CHANGELOG.md", encoding="utf-8").read()
+          pattern = rf"## \[{re.escape(version)}\].*?(?=\n## \[|\Z)"
+          match = re.search(pattern, changelog, re.S)
+          notes = match.group(0).strip() if match else f"Release {version}"
+          with open("release-notes.md", "w", encoding="utf-8") as file:
+              file.write(notes + "\n")
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${GITHUB_REF_NAME}" --title "${GITHUB_REF_NAME}" --notes-file release-notes.md
