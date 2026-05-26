@@ -3,6 +3,12 @@
 Формат основан на [Keep a Changelog](https://keepachangelog.com/ru/1.1.0/),
 версии следуют [Semantic Versioning](https://semver.org/lang/ru/).
 
+## [0.1.3] - 2026-05-27
+
+### Fixed
+
+- Диагностика `Protocol != ...` теперь обрабатывает любой ожидаемый протокол и рекомендует выставить на narodmon.ru тип протокола в соответствии с выбранным транспортом в Home Assistant.
+
 ## [0.1.2] - 2026-05-27
 
 ### Fixed

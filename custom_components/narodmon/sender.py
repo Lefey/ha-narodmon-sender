@@ -160,7 +160,7 @@ class NarodmonSender:
 
         self._last_send_time = self.hass.loop.time()
         self._data_changed = False
-        _log_server_reply(reply)
+        _log_server_reply(reply, transport)
 
     async def _async_send_http_payload(self, payload: str, transport: Transport) -> str:
         """Send payload through HTTP(S) POST."""
@@ -297,7 +297,7 @@ def _device_name(device: dr.DeviceEntry | None, fallback: str) -> str:
     return device.name_by_user or device.name or fallback
 
 
-def _log_server_reply(reply: str) -> None:
+def _log_server_reply(reply: str, transport: Transport) -> None:
     """Log Narodmon server reply with actionable diagnostics."""
     cleaned_reply = reply.strip()
     try:
@@ -311,15 +311,28 @@ def _log_server_reply(reply: str) -> None:
         _LOGGER.info("Narodmon server reply: %s", cleaned_reply)
         return
 
-    if error == "Protocol != TCP":
+    if isinstance(error, str) and error.startswith("Protocol != "):
+        expected_protocol = error.removeprefix("Protocol != ").strip()
+        selected_protocol = _narodmon_protocol_name(transport)
         _LOGGER.error(
-            "Narodmon rejected the packet: %s. Open narodmon.ru, go to Sensors > Configure "
-            "for this device and set the device protocol/type to TCP, then try again.",
+            "Narodmon rejected the packet: %s. The device on narodmon.ru is configured for protocol %s, "
+            "but this Home Assistant integration entry is using %s. Open narodmon.ru, go to "
+            "Sensors > Configure for this device and set the protocol/type to match the transport "
+            "selected in Home Assistant.",
             cleaned_reply,
+            expected_protocol,
+            selected_protocol,
         )
         return
 
     _LOGGER.error("Narodmon rejected the packet: %s", cleaned_reply)
+
+
+def _narodmon_protocol_name(transport: Transport) -> str:
+    """Return Narodmon protocol name for a selected transport."""
+    if transport == Transport.TCP:
+        return "TCP"
+    return "JSON"
 
 
 def _send_tcp_payload(payload: str) -> str:
