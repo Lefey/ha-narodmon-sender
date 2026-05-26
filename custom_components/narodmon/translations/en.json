@@ -1,0 +1,76 @@
+{
+  "config": {
+    "abort": {
+      "already_configured": "A device with this MAC address is already configured"
+    },
+    "error": {
+      "entities_not_selected": "Select at least one sensor",
+      "invalid_mac": "Enter a 12-18 character A-Z and 0-9 identifier"
+    },
+    "step": {
+      "user": {
+        "title": "Narodmon",
+        "description": "Configure JSON packet delivery to Narodmon. You can keep the generated MAC or replace it with your own.",
+        "data": {
+          "transport": "Transport",
+          "device_mode": "Sensor grouping",
+          "generate_mac": "Generate a new MAC",
+          "device_mac": "Virtual device MAC",
+          "device_name": "Virtual device name",
+          "coordinates_entity": "Zone for coordinates",
+          "send_interval_changed": "Changed data send interval, seconds",
+          "send_interval_force": "Forced send interval, seconds"
+        }
+      },
+      "entities": {
+        "title": "Sensors to send",
+        "description": "Choose numeric sensors or binary_sensor entities. Non-numeric states will be skipped.",
+        "data": {
+          "entities": "Sensors"
+        }
+      }
+    }
+  },
+  "options": {
+    "error": {
+      "entities_not_selected": "Select at least one sensor",
+      "invalid_mac": "Enter a 12-18 character A-Z and 0-9 identifier"
+    },
+    "step": {
+      "init": {
+        "title": "Narodmon settings",
+        "data": {
+          "transport": "Transport",
+          "device_mode": "Sensor grouping",
+          "generate_mac": "Generate a new MAC",
+          "device_mac": "Virtual device MAC",
+          "device_name": "Virtual device name",
+          "coordinates_entity": "Zone for coordinates",
+          "send_interval_changed": "Changed data send interval, seconds",
+          "send_interval_force": "Forced send interval, seconds"
+        }
+      },
+      "entities": {
+        "title": "Sensors to send",
+        "data": {
+          "entities": "Sensors"
+        }
+      }
+    }
+  },
+  "selector": {
+    "transport": {
+      "options": {
+        "tcp": "TCP JSON to narodmon.ru:8283",
+        "http": "HTTP POST to http://narodmon.ru/json",
+        "https": "HTTPS POST to https://narodmon.ru/json"
+      }
+    },
+    "device_mode": {
+      "options": {
+        "virtual": "Single virtual device",
+        "ha_devices": "By Home Assistant devices"
+      }
+    }
+  }
+}

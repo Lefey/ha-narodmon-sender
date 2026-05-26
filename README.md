@@ -1,54 +1,76 @@
-# Изменения 2026 г.
-Спасибо автору за этот скрипт, но после обновлений он перестал работать. Я попросил ИИ переписать под новые реалии и вот что получилось.
-Переписан сам питоновский скрипт, добавлены проверки на наличие данных и задержка на отправку после перезагрузки HA.
-Добавлены две переменные в конфиг:
-- минимальный интервал отправки если данные изменились (по правилам narodmon не чаще 5 минут).
-- Максимальный интервал если данные не менялись но нужно всё равно отправить. (поставил у себя 20 минут).
-- Пример (config.yaml):
-  send_interval_changed: 360   # 6 минут
-  send_interval_force: 1200    # 20 минут
-  
-# ad_narodmon_sender
-Appdaemon app for sending sensor data from home assistant to narodmon.ru
+# ha-narodmon-sender
 
-## Installation
+Кастомная интеграция Home Assistant для отправки показаний выбранных датчиков в
+сервис [narodmon.ru](https://narodmon.ru).
 
-Download the `narodmon_sender` directory from inside the `apps` directory here to your local `apps` directory, then configure parameters in `config.yaml` file inside `narodmon_sender` directory.
+Интеграция настраивается через UI Home Assistant, использует JSON-протокол
+Narodmon и поддерживает отправку данных:
 
-## App configuration
+- через TCP JSON на `narodmon.ru:8283`;
+- через HTTP POST на `http://narodmon.ru/json`;
+- через HTTPS POST на `https://narodmon.ru/json`.
 
-```yaml
-narodmon_sender:
-  module: narodmon_sender
-  class: narodmon_sender
-  narodmon_device_mac:
-  narodmon_device_name:
-  hass_coordinates_entity:
-  hass_sensor_entities:
+## Возможности
+
+- Выбор отправляемых `sensor` и `binary_sensor` через стандартный UI Home
+  Assistant.
+- Отправка нескольких приборов в одном JSON-пакете.
+- Два режима группировки показаний:
+  - **Один виртуальный прибор** - все выбранные сенсоры отправляются как один
+    прибор Narodmon. Подходит, если нужно экономить лимит отдельных приборов.
+  - **По устройствам Home Assistant** - сенсоры группируются по устройствам из
+    device registry, а MAC/ID и имя формируются автоматически.
+- Генерация MAC/ID для виртуального прибора.
+- Передача координат `lat` и `lon` из выбранной зоны, например `zone.home`.
+- Отправка при изменении значений с минимальным интервалом.
+- Принудительная периодическая отправка, даже если значения не менялись.
+
+Значения выбранных `sensor` отправляются как числа. Нечисловые состояния,
+`unknown` и `unavailable` пропускаются. Значения выбранных `binary_sensor`
+преобразуются в `1` для `on` и `0` для `off`.
+
+## Установка Через HACS
+
+Репозиторий подготовлен для установки как HACS custom repository:
+
+1. Откройте **HACS > Integrations**.
+2. Нажмите меню в правом верхнем углу и выберите **Custom repositories**.
+3. Укажите URL этого GitHub-репозитория.
+4. В поле категории выберите **Integration**.
+5. Установите интеграцию Narodmon.
+6. Перезапустите Home Assistant.
+7. Добавьте интеграцию через **Настройки > Устройства и службы > Добавить интеграцию > Narodmon**.
+
+## Ручная Установка
+
+Скопируйте папку:
+
+```text
+custom_components/narodmon
 ```
 
-key | optional | type | default | description
--- | -- | -- | -- | --
-`module` | False | string | narodmon_sender | The module name of the app.
-`class` | False | string | narodmon_sender | The name of the Class.
-`narodmon_device_mac` | False | string | | MAC-address to identify your device on narodmon.ru
-`narodmon_device_name` | True | string | | Name for your device
-`hass_coordinates_entity` | True | string | | Home assistant zone entity_id for getting latitude and longitude, helps auto placing device on map
-`hass_sensor_entities` | False | string | | Comma-separated home assistant sensor or binary_sensor entity_id`s (without spaces)
+в папку конфигурации Home Assistant:
 
-## Example app configuration
+```text
+/config/custom_components/narodmon
+```
 
-```yaml
-narodmon_sender:
-  module: narodmon_sender
-  class: narodmon_sender
-  narodmon_device_mac: AABBCCDDEEFF
-  narodmon_device_name: Aqara_WSDCGQ11LM
-  hass_coordinates_entity: zone.home
-  hass_sensor_entities: sensor.outside_temperature,sensor.outside_humidity,sensor.outside_pressure,binary_sensor.window
-  ```
+Перезапустите Home Assistant и добавьте интеграцию через **Настройки >
+Устройства и службы > Добавить интеграцию > Narodmon**.
 
-Happy to receive your thanks!
+## Настройки
 
-<a href="https://pay.cloudtips.ru/p/eb0b1d9c" target="_blank"><img src="https://api.cloudtips.ru/api/layouts/qr/eb0b1d9c.png" width="128" height="auto" title="Donate"></img></a><br>
-<a href="https://pay.cloudtips.ru/p/eb0b1d9c" target="_blank">Support with donation</a>
+При добавлении интеграции доступны:
+
+- способ отправки: TCP, HTTP или HTTPS;
+- режим группировки: один виртуальный прибор или по устройствам Home Assistant;
+- MAC/ID виртуального прибора, например `AABBCCDDEEFF`, или генерация нового;
+- имя виртуального прибора;
+- зона для координат, обычно `zone.home`;
+- минимальный интервал отправки изменившихся данных, по умолчанию `360` секунд;
+- принудительный интервал отправки, если значения не меняются, по умолчанию `1200` секунд;
+- список `sensor` и `binary_sensor` сущностей для отправки.
+
+В стандартном config flow Home Assistant нельзя встроить отдельную кнопку прямо
+рядом с полем ввода без собственного frontend-компонента, поэтому генерация
+MAC/ID сделана переключателем в той же форме.

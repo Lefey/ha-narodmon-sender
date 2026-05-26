@@ -1,0 +1,84 @@
+{
+  "config": {
+    "abort": {
+      "already_configured": "Устройство с таким MAC-адресом уже настроено"
+    },
+    "error": {
+      "entities_not_selected": "Нужно выбрать хотя бы один сенсор",
+      "invalid_mac": "Укажите идентификатор из 12-18 символов A-Z и 0-9"
+    },
+    "step": {
+      "user": {
+        "title": "Narodmon",
+        "description": "Укажите параметры передачи JSON-пакетов на Narodmon. MAC можно оставить с автоматически сгенерированным значением или заменить своим.",
+        "data": {
+          "transport": "Способ отправки",
+          "device_mode": "Группировка сенсоров",
+          "generate_mac": "Сгенерировать новый MAC",
+          "device_mac": "MAC виртуального прибора",
+          "device_name": "Имя виртуального прибора",
+          "coordinates_entity": "Зона для координат",
+          "send_interval_changed": "Интервал отправки изменившихся данных, секунд",
+          "send_interval_force": "Принудительный интервал отправки, секунд"
+        },
+        "data_description": {
+          "device_mode": "Один виртуальный прибор экономит лимит Narodmon. По устройствам Home Assistant создает отдельный прибор Narodmon для каждого исходного устройства.",
+          "generate_mac": "Home Assistant config flow не поддерживает отдельную кнопку рядом с полем, поэтому генерация сделана переключателем в этой же форме.",
+          "device_mac": "Используется для режима одного виртуального прибора и как fallback для сенсоров без устройства.",
+          "coordinates_entity": "Необязательно. Обычно zone.home, из нее будут взяты latitude и longitude.",
+          "send_interval_changed": "Narodmon не рекомендует отправлять данные чаще одного раза в 5 минут.",
+          "send_interval_force": "Если значения не меняются, интеграция все равно будет периодически отправлять актуальные данные."
+        }
+      },
+      "entities": {
+        "title": "Сенсоры для отправки",
+        "description": "Выберите числовые сенсоры или binary_sensor. Нечисловые состояния будут пропущены.",
+        "data": {
+          "entities": "Сенсоры"
+        }
+      }
+    }
+  },
+  "options": {
+    "error": {
+      "entities_not_selected": "Нужно выбрать хотя бы один сенсор",
+      "invalid_mac": "Укажите идентификатор из 12-18 символов A-Z и 0-9"
+    },
+    "step": {
+      "init": {
+        "title": "Параметры Narodmon",
+        "data": {
+          "transport": "Способ отправки",
+          "device_mode": "Группировка сенсоров",
+          "generate_mac": "Сгенерировать новый MAC",
+          "device_mac": "MAC виртуального прибора",
+          "device_name": "Имя виртуального прибора",
+          "coordinates_entity": "Зона для координат",
+          "send_interval_changed": "Интервал отправки изменившихся данных, секунд",
+          "send_interval_force": "Принудительный интервал отправки, секунд"
+        }
+      },
+      "entities": {
+        "title": "Сенсоры для отправки",
+        "data": {
+          "entities": "Сенсоры"
+        }
+      }
+    }
+  },
+  "selector": {
+    "transport": {
+      "options": {
+        "tcp": "TCP JSON на narodmon.ru:8283",
+        "http": "HTTP POST на http://narodmon.ru/json",
+        "https": "HTTPS POST на https://narodmon.ru/json"
+      }
+    },
+    "device_mode": {
+      "options": {
+        "virtual": "Один виртуальный прибор",
+        "ha_devices": "По устройствам Home Assistant"
+      }
+    }
+  }
+}

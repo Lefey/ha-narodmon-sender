@@ -1,0 +1,11 @@
+{
+  "domain": "narodmon",
+  "name": "Narodmon",
+  "codeowners": [],
+  "config_flow": true,
+  "documentation": "https://github.com/Lefey/ha-narodmon-sender",
+  "iot_class": "cloud_push",
+  "issue_tracker": "https://github.com/Lefey/ha-narodmon-sender/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}
