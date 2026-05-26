@@ -70,8 +70,8 @@
     "transport": {
       "options": {
         "tcp": "TCP JSON на narodmon.ru:8283",
-        "http": "HTTP POST на http://narodmon.ru/json",
-        "https": "HTTPS POST на https://narodmon.ru/json"
+        "http": "HTTP POST на http://narodmon.com/json",
+        "https": "HTTPS POST на https://narodmon.com/json"
       }
     },
     "device_mode": {

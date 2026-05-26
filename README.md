@@ -7,8 +7,8 @@
 Narodmon и поддерживает отправку данных:
 
 - через TCP JSON на `narodmon.ru:8283`;
-- через HTTP POST на `http://narodmon.ru/json`;
-- через HTTPS POST на `https://narodmon.ru/json`.
+- через HTTP POST на `http://narodmon.com/json`;
+- через HTTPS POST на `https://narodmon.com/json`.
 
 ## Возможности
 

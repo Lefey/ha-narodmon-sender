@@ -170,12 +170,15 @@ class NarodmonSender:
             response.raise_for_status()
             return await response.text()
 
-    def _build_packet(self) -> dict[str, list[dict[str, Any]]] | None:
+    def _build_packet(self) -> dict[str, Any] | None:
         """Build Narodmon JSON protocol packet."""
         devices = self._build_devices()
         if not devices:
             return None
-        return {"devices": devices}
+        return {
+            "protocol": "TCP",
+            "devices": devices,
+        }
 
     def _build_devices(self) -> list[dict[str, Any]]:
         """Build JSON devices from selected entities."""
@@ -300,5 +303,5 @@ def _device_name(device: dr.DeviceEntry | None, fallback: str) -> str:
 def _send_tcp_payload(payload: str) -> str:
     """Send JSON payload to Narodmon using the blocking socket API."""
     with socket.create_connection((NARODMON_HOST, NARODMON_PORT), timeout=SOCKET_TIMEOUT) as sock:
-        sock.sendall(payload.encode("utf-8"))
+        sock.sendall(f"{payload}\n".encode("utf-8"))
         return sock.recv(1024).decode("utf-8", errors="ignore")

@@ -21,8 +21,8 @@ DEFAULT_VIRTUAL_DEVICE_NAME = "Home Assistant"
 MAX_PACKET_SIZE = 4096
 
 NARODMON_HOST = "narodmon.ru"
-NARODMON_HTTP_URL = "http://narodmon.ru/json"
-NARODMON_HTTPS_URL = "https://narodmon.ru/json"
+NARODMON_HTTP_URL = "http://narodmon.com/json"
+NARODMON_HTTPS_URL = "https://narodmon.com/json"
 NARODMON_PORT = 8283
 SOCKET_TIMEOUT = 10
 
