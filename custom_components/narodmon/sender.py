@@ -160,7 +160,7 @@ class NarodmonSender:
 
         self._last_send_time = self.hass.loop.time()
         self._data_changed = False
-        _LOGGER.info("Narodmon server reply: %s", reply.strip())
+        _log_server_reply(reply)
 
     async def _async_send_http_payload(self, payload: str, transport: Transport) -> str:
         """Send payload through HTTP(S) POST."""
@@ -175,10 +175,7 @@ class NarodmonSender:
         devices = self._build_devices()
         if not devices:
             return None
-        return {
-            "protocol": "TCP",
-            "devices": devices,
-        }
+        return {"devices": devices}
 
     def _build_devices(self) -> list[dict[str, Any]]:
         """Build JSON devices from selected entities."""
@@ -298,6 +295,31 @@ def _device_name(device: dr.DeviceEntry | None, fallback: str) -> str:
     if device is None:
         return fallback
     return device.name_by_user or device.name or fallback
+
+
+def _log_server_reply(reply: str) -> None:
+    """Log Narodmon server reply with actionable diagnostics."""
+    cleaned_reply = reply.strip()
+    try:
+        parsed = json.loads(cleaned_reply)
+    except ValueError:
+        _LOGGER.info("Narodmon server reply: %s", cleaned_reply)
+        return
+
+    error = parsed.get("error")
+    if not error:
+        _LOGGER.info("Narodmon server reply: %s", cleaned_reply)
+        return
+
+    if error == "Protocol != TCP":
+        _LOGGER.error(
+            "Narodmon rejected the packet: %s. Open narodmon.ru, go to Sensors > Configure "
+            "for this device and set the device protocol/type to TCP, then try again.",
+            cleaned_reply,
+        )
+        return
+
+    _LOGGER.error("Narodmon rejected the packet: %s", cleaned_reply)
 
 
 def _send_tcp_payload(payload: str) -> str:
